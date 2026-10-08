@@ -5,20 +5,54 @@ trigger:
 - feature/*
 
 stages:
-  - stage: plan
-    displayName: plan
-    jobs:
-      - job: plan
-        displayName: plan
-        steps:
-          - task: TerraformTask@5
-            inputs:
-              provider: 'azurerm'
-              command: 'init'
-              workingDirectory: '$(System.DefaultWorkingDirectory)/Environment/preprod'
-              backendServiceArm: 'service-connection'
-              backendAzureRmResourceGroupName: 'newrg'
-              backendAzureRmStorageAccountName: 'samplesto777'
-              backendAzureRmContainerName: 'container'
-              backendAzureRmKey: 'terraform.tfstate'
 
+- stage: init
+  displayName: Terraform init
+
+  jobs:
+  - job: Terraform_init
+    displayName: Terraform init
+
+    steps:
+    - task: TerraformTask@5
+      displayName: Terraform init
+      inputs:
+        provider: 'azurerm'
+        command: 'init'
+        workingDirectory: '$(System.DefaultWorkingDirectory)/Environment/preprod'
+        backendServiceArm: 'service-connection'
+        backendAzureRmResourceGroupName: 'newrg'
+        backendAzureRmStorageAccountName: 'samplesto777'
+        backendAzureRmContainerName: 'container'
+        backendAzureRmKey: 'terraform.tfstate'
+
+
+- stage: plan
+  displayName: Terraform plan
+
+  dependsOn: init
+
+  jobs:
+  - job: Terraform_plan
+    displayName: Terraform plan
+
+    steps:
+    - task: TerraformTask@5
+      displayName: Terraform init
+      inputs:
+        provider: 'azurerm'
+        command: 'init'
+        workingDirectory: '$(System.DefaultWorkingDirectory)/Environment/preprod'
+        backendServiceArm: 'service-connection'
+        backendAzureRmResourceGroupName: 'newrg'
+        backendAzureRmStorageAccountName: 'samplesto777'
+        backendAzureRmContainerName: 'container'
+        backendAzureRmKey: 'terraform.tfstate'
+
+    - task: TerraformTask@5
+      displayName: Terraform plan
+      inputs:
+        provider: 'azurerm'
+        command: 'plan'
+        workingDirectory: '$(System.DefaultWorkingDirectory)/Environment/preprod'
+        environmentServiceNameAzureRM: 'service-connection'
