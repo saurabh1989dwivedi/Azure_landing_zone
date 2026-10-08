@@ -56,3 +56,35 @@ stages:
         command: 'plan'
         workingDirectory: '$(System.DefaultWorkingDirectory)/Environment/preprod'
         environmentServiceNameAzureRM: 'service-connection'
+
+
+  
+- stage: apply
+  displayName: Terraform apply
+
+  dependsOn: plan
+
+  jobs:
+  - job: Terraform_apply
+    displayName: Terraform apply
+
+    steps:
+    - task: TerraformTask@5
+      displayName: Terraform init
+      inputs:
+        provider: 'azurerm'
+        command: 'init'
+        workingDirectory: '$(System.DefaultWorkingDirectory)/Environment/preprod'
+        backendServiceArm: 'service-connection'
+        backendAzureRmResourceGroupName: 'newrg'
+        backendAzureRmStorageAccountName: 'samplesto777'
+        backendAzureRmContainerName: 'container'
+        backendAzureRmKey: 'terraform.tfstate'
+
+    - task: TerraformTask@5
+      displayName: Terraform apply
+      inputs:
+        provider: 'azurerm'
+        command: 'apply'
+        workingDirectory: '$(System.DefaultWorkingDirectory)/Environment/preprod'
+        environmentServiceNameAzureRM: 'service-connection'      
