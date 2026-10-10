@@ -1,9 +1,17 @@
 pool: Agent-Burst
 
+# Run when code is pushed to main or a feature branch
 trigger:
-- main
-- feature/*
+  branches:
+    include:
+      - main
+      - feature/*
 
+# Run validation when a PR targets main
+pr:
+  branches:
+    include:
+      - main
 stages:
 
 - stage: init
